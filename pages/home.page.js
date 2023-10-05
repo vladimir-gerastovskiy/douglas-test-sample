@@ -1,12 +1,14 @@
-const { NavigationTab } = require("./components/navigation-tab.component");
+import { ConsentModalDialog } from "./components/consent-dialog.component.js";
+import { NavigationTab } from "./components/navigation-tab.component.js";
 
-exports.HomePage = class HomePage {
+export class HomePage {
     constructor(page) {
         this.page = page;
         this.navBar = new NavigationTab(page);
+        this.consentsDialog = new ConsentModalDialog(page);
     }
 
     async open() {
-        await this.page.goto('/');        
+        await this.page.goto('/', { waitUntil: 'networkidle' });
     }
 }

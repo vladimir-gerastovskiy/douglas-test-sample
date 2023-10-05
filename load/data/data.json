@@ -1,0 +1,32 @@
+[
+    {
+        "testName": "Sale products",
+        "filter": {
+            "Highlights": ["Sale"],
+            "Produktart": ["Parfum"],
+            "Marke": ["Armani"],
+            "Für Wen": ["Weiblich"]
+        },
+        "expectedProductNumber": 4
+    },
+    {
+        "testName": "NEU products",
+        "filter": {
+            "Highlights": ["NEU"],
+            "Produktart": ["Parfum"],
+            "Für Wen": ["Unisex"]
+        },
+        "expectedProductNumber": 584
+    },
+    {
+        "testName": "Limitiert products",
+        "filter": {
+            "Highlights": ["Limitiert"],
+            "Produktart": ["Duftset"],
+            "Marke": ["Armani"],
+            "Geschenk für": ["Weihnachten"],
+            "Für Wen": ["Weiblich"]
+        },
+        "expectedProductNumber": 4
+    }
+]

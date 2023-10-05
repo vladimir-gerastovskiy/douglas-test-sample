@@ -1,17 +1,59 @@
-const { test, expect } = require('@playwright/test');
-const { HomePage } = require('../pages/home.page');
+import { test, expect } from '@playwright/test';
+import { HomePage } from '../pages/home.page';
+import { ParfumPage } from '../pages/parfum.page';
+import { FacetComponent } from '../pages/components/facet.component';
 
-test('Parfum page is opened', async ({ page }) => {
-    const homePage = new HomePage(page);
-    await homePage.open();
-    await homePage.navBar.navigateToMarkenPage();
-    // await homePage.navBar.markenTab.click();
-    // await homePage.navBar.parfumTab.click();
-    // await homePage.navBar.makeUpTab.click();
-    // await homePage.navBar.gesichtTab.click();
-    // await homePage.navBar.kopperTab.click();
-    // await homePage.navBar.haareTab.click();
-    // await homePage.navBar.appothekeTab.click();
-    // await homePage.navBar.douglasCollectionTab.click();
-    // await homePage.navBar.homeLifestyleTab.click();
-});
+[
+    {
+        "testName": "Sale products",
+        "filter": {
+            "Highlights": ["Sale"],
+            "Produktart": ["Parfum"],
+            "Marke": ["Armani"],
+            "Für Wen": ["Weiblich"]
+        },
+        "expectedProductNumber": 4,
+    },
+    {
+        "testName": "NEU products",
+        "filter": {
+            "Highlights": ["NEU"],
+            "Produktart": ["Parfum"],
+            "Für Wen": ["Unisex"]
+        },
+        "expectedProductNumber": 584,
+    },
+    {
+        "testName": "Limitiert products",
+        "filter": {
+            "Highlights": ["Limitiert"],
+            "Produktart": ["Duftset"],
+            "Marke": ["Armani"],
+            "Geschenk für": ["Weihnachten"],
+            "Für Wen": ["Weiblich"]
+        },
+        "expectedProductNumber": 4,
+    }
+].forEach(testData =>
+    test(`Test ${testData.testName}`, async ({ page }) => {
+        const homePage = new HomePage(page);
+        await homePage.open();
+
+        await homePage.consentsDialog.acceptAllBtn.click();
+
+        await homePage.navBar.parfumTab.click();
+        const parfumPage = new ParfumPage(page);
+        await parfumPage.isOpened();
+
+        for (const facetTitle in testData.filter) {
+            if (testData.filter.hasOwnProperty(facetTitle)) {
+                const facet = new FacetComponent(page, facetTitle);
+                await facet.selectOption(testData.filter[facetTitle]);
+            }
+        }
+
+        const productsNumber = await parfumPage.getProductNumber();
+        console.log(await parfumPage.getProductNumber());
+        expect(productsNumber).toBe(testData.expectedProductNumber);
+    })
+);

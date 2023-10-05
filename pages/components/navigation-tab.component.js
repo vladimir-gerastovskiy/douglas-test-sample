@@ -1,12 +1,13 @@
-const { MarkenPage } = require("../marken.page");
+import { MarkenPage } from "../marken.page.js";
+import { ParfumPage } from "../parfum.page.js";
 
 
-exports.NavigationTab = class NavigationTab {
+export class NavigationTab {
     constructor(page) {
         this.page = page;
-
-        this.markenTab = page.locator('[type="nav-heading"]', { hasText: "MARKEN" });
-        this.parfumTab = page.locator('[type="nav-heading"]', { hasText: "PARFUM" });
+        
+        this.markenTab = page.locator('//a[@type="nav-heading"][text()="MARKEN"]');
+        this.parfumTab = page.locator('//a[@type="nav-heading"][text()="PARFUM"]');
         this.makeUpTab = page.locator('[type="nav-heading"]', { hasText: "MAKE-UP" });
         this.gesichtTab = page.locator('[type="nav-heading"]', { hasText: "GESICHT" });
         this.kopperTab = page.locator('[type="nav-heading"]', { hasText: "KÖRPER" });
@@ -25,5 +26,12 @@ exports.NavigationTab = class NavigationTab {
         await this.markenTab.click();
         const markenPage = new MarkenPage(this.page);
         await markenPage.brandPageContainer.isVisible();
+        await markenPage.headlineWraper.isVisible();
+    }
+
+    async navigateToParfumPage() {
+        await this.parfumTab.click();
+        const parfumPage = new ParfumPage(this.page);
+        await expect(parfumPage.headlineWrapper).toContainText('Parfum & Düfte');
     }
 }
